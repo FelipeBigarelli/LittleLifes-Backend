@@ -1,40 +1,24 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
-import User from './User';
+import mongoose from 'mongoose';
 
-@Entity('posts')
-class Post {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+const { ObjectId } = mongoose.Schema.Types;
 
-  @Column()
-  user_id: string;
+const postSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  body: {
+    type: String,
+    required: true,
+  },
+  photo: {
+    type: String,
+    required: true,
+  },
+  postedBy: {
+    type: ObjectId,
+    ref: 'User',
+  },
+});
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  @Column()
-  image: string;
-
-  @Column()
-  description: string;
-
-  @Column('int', { array: true })
-  likes: number[];
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-}
-
-export default Post;
+mongoose.model('Post', postSchema);
